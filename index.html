@@ -115,9 +115,9 @@
         row.style.display = text.includes(query) ? "" : "none";
       });
     }
-
-
+    
     loadAllUsers();
+    setInterval(loadAllUsers, 10000); // refresh setiap 10 detik
   </script>
 
 </body>
