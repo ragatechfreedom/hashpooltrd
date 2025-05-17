@@ -80,6 +80,19 @@
     <tbody></tbody>
   </table>
 
+  <h2>📜 Riwayat Transaksi</h2>
+<table id="logTable">
+  <thead>
+    <tr>
+      <th>Waktu</th>
+      <th>Dari (Email)</th>
+      <th>Ke (Wallet)</th>
+      <th>Jumlah (TRD)</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
   <script>
     const apiBase = "https://beneficial-holistic-harbor.glitch.me";
 
@@ -115,8 +128,35 @@
         row.style.display = text.includes(query) ? "" : "none";
       });
     }
+
+    async function loadTransactionLog() {
+  try {
+    const res = await fetch(`${apiBase}/transactions`);
+    const data = await res.json();
+    if (!data.success) return;
+
+    const tbody = document.querySelector("#logTable tbody");
+    tbody.innerHTML = "";
+
+    data.data.forEach(tx => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${new Date(tx.timestamp).toLocaleString()}</td>
+        <td>${tx.from_email}</td>
+        <td>${tx.to_wallet}</td>
+        <td>${parseFloat(tx.amount).toFixed(5)} TRD</td>
+      `;
+      tbody.appendChild(row);
+    });
+
+  } catch (err) {
+    console.error("Gagal ambil log transaksi:", err);
+  }
+}
+
     
     loadAllUsers();
+    loadTransactionLog();
     setInterval(loadAllUsers, 10000); // refresh setiap 10 detik
   </script>
 
